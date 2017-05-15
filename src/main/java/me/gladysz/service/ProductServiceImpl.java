@@ -18,10 +18,14 @@ public class ProductServiceImpl implements ProductService {
         loadProducts();
     }
 
-
     @Override
     public List<Product> listAllProducts() {
         return new ArrayList<>(products.values());
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return products.get(id);
     }
 
     private void loadProducts() {
