@@ -40,7 +40,12 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--WebJars-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <!--WebJars-->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
