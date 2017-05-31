@@ -39,6 +39,15 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public void deleteProduct(Long id) {
+        if (id != null) {
+            products.remove(id);
+        } else {
+            throw new RuntimeException("Product must exist to be deleted");
+        }
+    }
+
     private Long getNextKey() {
         return Collections.max(products.keySet()) + 1;
     }
