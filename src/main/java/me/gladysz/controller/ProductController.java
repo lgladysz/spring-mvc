@@ -31,6 +31,12 @@ public class ProductController {
         return "product";
     }
 
+    @RequestMapping("/product/edit/{id}")
+    public String editProduct(@PathVariable Long id, Model model) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "productform";
+    }
+
     @RequestMapping("/product/new")
     public String newProduct(Model model) {
         model.addAttribute("product", new Product());
