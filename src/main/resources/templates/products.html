@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Spring MVC Learning - List of Products</title>
@@ -35,6 +35,9 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    <div class="row">
+        <a th:href="${'/product/new'}">New Product</a>
     </div>
 </div>
 </body>
