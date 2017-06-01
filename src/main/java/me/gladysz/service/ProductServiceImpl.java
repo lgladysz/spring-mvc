@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
 
             return product;
         } else {
-            throw new RuntimeException("Product Can't be nill");
+            throw new RuntimeException("Product Can't be null");
         }
     }
 
