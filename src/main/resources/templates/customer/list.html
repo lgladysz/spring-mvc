@@ -8,13 +8,13 @@
           rel="stylesheet" media="screen"/>
     <script src="/webjars/jquery/3.2.0/jquery.min.js"
             th:src="@{/webjars/jquery/3.2.0/jquery.min.js}"></script>
-    <link href="../static/css/style.css"
+    <link href="../../static/css/style.css"
           th:href="@{css/style.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
 <div class="container">
     <div th:unless="${#lists.isEmpty(customers)}">
-        <h2>Product List</h2>
+        <h2>Customer List</h2>
         <table class="table">
             <thead>
             <tr>
@@ -43,7 +43,7 @@
                 <td th:text="${customer.addressLineTwo}"></td>
                 <td th:text="${customer.city}"></td>
                 <td th:text="${customer.zipCode}"></td>
-                <td><a th:href="${'/customer/' + customer.id}">View</a></td>
+                <td><a th:href="${'/customer/show/' + customer.id}">View</a></td>
                 <td><a th:href="${'/customer/edit/' + customer.id}">Edit</a></td>
                 <td><a th:href="${'/customer/delete/' + customer.id}">Delete</a></td>
             </tr>
@@ -51,7 +51,10 @@
         </table>
     </div>
     <div class="row">
-        <a th:href="${'/customer/new'}">New Customer</a>
+        <ul>
+            <li><a th:href="${'/customer/new'}">New Customer</a></li>
+            <li><a th:href="${'/'}">Go back to Home Page</a></li>
+        </ul>
     </div>
 </div>
 </body>

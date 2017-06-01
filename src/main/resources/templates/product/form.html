@@ -8,7 +8,7 @@
           rel="stylesheet" media="screen"/>
     <script src="/webjars/jquery/3.2.0/jquery.min.js"
             th:src="@{/webjars/jquery/3.2.0/jquery.min.js}"></script>
-    <link href="../static/css/style.css"
+    <link href="../../static/css/style.css"
           th:href="@{css/style.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
@@ -43,6 +43,9 @@
                 <button type="submit" class="btn btn-default">Submit</button>
             </div>
         </form>
+    </div>
+    <div class="row">
+        <a th:href="${'/product/list'}">Back to Products list</a>
     </div>
 </div>
 

@@ -8,7 +8,7 @@
           rel="stylesheet" media="screen"/>
     <script src="/webjars/jquery/3.2.0/jquery.min.js"
             th:src="@{/webjars/jquery/3.2.0/jquery.min.js}"></script>
-    <link href="../static/css/style.css"
+    <link href="../../static/css/style.css"
           th:href="@{css/style.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
@@ -33,7 +33,7 @@
                 <td th:text="${product.description}"></td>
                 <td th:text="${product.price}"></td>
                 <td th:text="${product.imageUrl}"></td>
-                <td><a th:href="${'/product/' + product.id}">View</a></td>
+                <td><a th:href="${'/product/show/' + product.id}">View</a></td>
                 <td><a th:href="${'/product/edit/' + product.id}">Edit</a></td>
                 <td><a th:href="${'/product/delete/' + product.id}">Delete</a></td>
             </tr>
@@ -41,7 +41,10 @@
         </table>
     </div>
     <div class="row">
-        <a th:href="${'/product/new'}">New Product</a>
+        <ul>
+            <li><a th:href="${'/product/new'}">New Product</a></li>
+            <li><a th:href="${'/'}">Go back to Home Page</a></li>
+        </ul>
     </div>
 </div>
 </body>

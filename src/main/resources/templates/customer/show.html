@@ -8,7 +8,7 @@
           rel="stylesheet" media="screen"/>
     <script src="/webjars/jquery/3.2.0/jquery.min.js"
             th:src="@{/webjars/jquery/3.2.0/jquery.min.js}"></script>
-    <link href="../static/css/style.css"
+    <link href="../../static/css/style.css"
           th:href="@{css/style.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
@@ -77,6 +77,9 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="row">
+        <a th:href="${'/customer/list'}">Back to Customers list</a>
     </div>
 </div>
 
