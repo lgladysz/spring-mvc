@@ -3,16 +3,18 @@ package me.gladysz.model;
 import java.math.BigDecimal;
 
 
-public class Product {
+public class Product implements DomainObject {
     private Long id;
     private String description;
     private BigDecimal price;
     private String imageUrl;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

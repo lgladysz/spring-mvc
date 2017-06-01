@@ -1,6 +1,6 @@
 package me.gladysz.model;
 
-public class Customer {
+public class Customer implements DomainObject {
     private Long id;
     private String firstName;
     private String lastName;
@@ -11,10 +11,12 @@ public class Customer {
     private String city;
     private String zipCode;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
