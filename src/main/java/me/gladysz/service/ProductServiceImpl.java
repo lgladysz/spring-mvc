@@ -35,17 +35,13 @@ public class ProductServiceImpl implements ProductService {
 
             return product;
         } else {
-            throw new RuntimeException("Product Can't be nill");
+            throw new RuntimeException("Product Can't be null");
         }
     }
 
     @Override
     public void deleteProduct(Long id) {
-        if (id != null) {
-            products.remove(id);
-        } else {
-            throw new RuntimeException("Product must exist to be deleted");
-        }
+        products.remove(id);
     }
 
     private Long getNextKey() {
