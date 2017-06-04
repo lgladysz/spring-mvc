@@ -75,7 +75,6 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/form"))
                 .andExpect(model().attribute("product", instanceOf(Product.class)));
-
     }
 
     @Test
@@ -111,7 +110,7 @@ public class ProductControllerTest {
                 .param("price", price.toString())
                 .param("imageUrl", imageUrl))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/product/show/1"))
+                .andExpect(view().name("redirect:/product/show/" + id.toString()))
                 .andExpect(model().attribute("product", instanceOf(Product.class)))
                 .andExpect(model().attribute("product", hasProperty("id", is(id))))
                 .andExpect(model().attribute("product", hasProperty("description", is(description))))
