@@ -9,7 +9,6 @@ public abstract class AbstractMapService {
 
     public AbstractMapService() {
         this.domainMap = new HashMap<>();
-        loadDomainObjects();
     }
 
     public List<DomainObject> listAll() {
@@ -44,6 +43,4 @@ public abstract class AbstractMapService {
             return 1L;
         }
     }
-
-    protected abstract void loadDomainObjects();
 }
