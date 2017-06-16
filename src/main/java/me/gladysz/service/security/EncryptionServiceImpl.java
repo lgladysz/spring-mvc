@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EncryptionServiceImpl implements EncryptionService {
 
-    private StrongPasswordEncryptor strongEncryptor;
+    private final StrongPasswordEncryptor strongEncryptor;
 
     @Autowired
     public EncryptionServiceImpl(StrongPasswordEncryptor strongEncryptor) {
