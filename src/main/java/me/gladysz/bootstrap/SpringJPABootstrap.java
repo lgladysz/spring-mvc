@@ -2,8 +2,10 @@ package me.gladysz.bootstrap;
 
 import me.gladysz.model.Customer;
 import me.gladysz.model.Product;
+import me.gladysz.model.User;
 import me.gladysz.service.CustomerService;
 import me.gladysz.service.ProductService;
+import me.gladysz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -19,16 +21,21 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
     private final CustomerService customerService;
 
+    private final UserService userService;
+
     @Autowired
-    public SpringJPABootstrap(ProductService productService, CustomerService customerService) {
+    public SpringJPABootstrap(ProductService productService, CustomerService customerService, UserService userService) {
         this.productService = productService;
         this.customerService = customerService;
+        this.userService = userService;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         loadProducts();
         loadCustomers();
+        loadUsers();
+        setRelationships();
     }
 
     private void loadCustomers() {
@@ -102,5 +109,39 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         product5.setPrice(new BigDecimal("45.99"));
         product5.setImageUrl("http://lorempixel.com/640/480/technics/5/");
         productService.saveOrUpdate(product5);
+    }
+
+    private void loadUsers() {
+        User user1 = new User();
+        user1.setUsername("Username1");
+        user1.setPassword("password1");
+        userService.saveOrUpdate(user1);
+
+        User user2 = new User();
+        user2.setUsername("Username2");
+        user2.setPassword("password2");
+        userService.saveOrUpdate(user2);
+
+        User user3 = new User();
+        user3.setUsername("Username3");
+        user3.setPassword("password3");
+        userService.saveOrUpdate(user3);
+    }
+
+    private void setRelationships() {
+        User user;
+        Customer customer;
+
+        user = userService.getById(1L);
+        customer = customerService.getById(1L);
+
+        customer.setUser(user);
+        customerService.saveOrUpdate(customer);
+
+        user = userService.getById(2L);
+        customer = customerService.getById(2L);
+
+        customer.setUser(user);
+        customerService.saveOrUpdate(customer);
     }
 }
