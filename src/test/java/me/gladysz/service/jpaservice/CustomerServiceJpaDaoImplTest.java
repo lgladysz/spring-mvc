@@ -1,6 +1,8 @@
-package me.gladysz.service;
+package me.gladysz.service.jpaservice;
 
 import me.gladysz.model.Customer;
+import me.gladysz.model.User;
+import me.gladysz.service.CustomerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.setRemoveAssertJRelatedElementsFromStackTrace;
 
 
 @RunWith(SpringRunner.class)
@@ -127,6 +130,22 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(returnedCustomer).hasFieldOrPropertyWithValue("city", "London");
         assertThat(returnedCustomer).hasFieldOrPropertyWithValue("zipCode", "12-345");
         assertThat(returnedCustomer).hasFieldOrPropertyWithValue("version", 0);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldSaveCustomerWithUser() throws Exception {
+        Customer customer = new Customer();
+        User user = new User();
+        user.setUsername("username1");
+        user.setPassword("password1");
+        customer.setUser(user);
+
+        Customer savedUser = customerService.saveOrUpdate(customer);
+
+        assertThat(savedUser.getUser().getId()).isNotNull();
+        assertThat(savedUser.getUser().getEncryptedPassword()).isNotNull();
+        assertThat(savedUser.getUser().getPassword()).isNull();
     }
 
     @Test
