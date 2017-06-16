@@ -1,5 +1,6 @@
 package me.gladysz.service.jpaservice;
 
+import me.gladysz.model.Customer;
 import me.gladysz.model.User;
 import me.gladysz.service.UserService;
 import me.gladysz.service.security.EncryptionService;
@@ -14,7 +15,7 @@ import java.util.List;
 @Profile("jpadao")
 public class UserServiceJpaDaoImpl extends AbstractJpaDaoService implements UserService {
 
-    private EncryptionService encryptionService;
+    private final EncryptionService encryptionService;
 
     @Autowired
     public UserServiceJpaDaoImpl(EncryptionService encryptionService) {
@@ -54,8 +55,14 @@ public class UserServiceJpaDaoImpl extends AbstractJpaDaoService implements User
     public void delete(Long id) {
         EntityManager em = emf.createEntityManager();
 
+        User user = em.find(User.class, id);
         em.getTransaction().begin();
-        em.remove(em.find(User.class, id));
+        Customer customer = user.getCustomer();
+        if (customer != null) {
+            customer.setUser(null);
+            user.setCustomer(null);
+        }
+        em.remove(user);
         em.getTransaction().commit();
     }
 }
