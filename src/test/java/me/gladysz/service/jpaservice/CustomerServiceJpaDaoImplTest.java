@@ -1,6 +1,9 @@
-package me.gladysz.service;
+package me.gladysz.service.jpaservice;
 
 import me.gladysz.model.Customer;
+import me.gladysz.model.User;
+import me.gladysz.service.CustomerService;
+import me.gladysz.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +24,16 @@ public class CustomerServiceJpaDaoImplTest {
 
     private CustomerService customerService;
 
+    private UserService userService;
+
     @Autowired
     public void setCustomerService(CustomerService customerService) {
         this.customerService = customerService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Test
@@ -46,7 +56,8 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(customer).hasFieldOrPropertyWithValue("addressLineTwo", "Seccond street");
         assertThat(customer).hasFieldOrPropertyWithValue("zipCode", "55-555");
         assertThat(customer).hasFieldOrPropertyWithValue("city", "NYC");
-        assertThat(customer).hasFieldOrPropertyWithValue("version", 0);
+        assertThat(customer).hasFieldOrPropertyWithValue("version", 1);
+        assertThat(customer.getUser()).isNotNull();
     }
 
     @Test
@@ -65,7 +76,7 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("addressLineTwo", "Seccond street");
         assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("zipCode", "55-555");
         assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("city", "NYC");
-        assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("version", 0);
+        assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("version", 1);
 
         modifiedCustomer.setFirstName("Jane");
         modifiedCustomer.setLastName("Moon");
@@ -91,7 +102,7 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(returnedCustomer).hasFieldOrPropertyWithValue("addressLineTwo", "Corner street");
         assertThat(returnedCustomer).hasFieldOrPropertyWithValue("city", "London");
         assertThat(returnedCustomer).hasFieldOrPropertyWithValue("zipCode", "12-345");
-        assertThat(returnedCustomer).hasFieldOrPropertyWithValue("version", 1);
+        assertThat(returnedCustomer).hasFieldOrPropertyWithValue("version", 2);
     }
 
     @Test
@@ -131,11 +142,61 @@ public class CustomerServiceJpaDaoImplTest {
 
     @Test
     @DirtiesContext
+    public void shouldSaveCustomerWithUser() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("FirstName");
+        customer.setLastName("LastName");
+
+        User user = new User();
+        user.setUsername("username1");
+        user.setPassword("password1");
+
+        customer.setUser(user);
+
+        Customer savedCustomer = customerService.saveOrUpdate(customer);
+
+        assertThat(savedCustomer.getUser().getId()).isNotNull();
+        assertThat(savedCustomer.getUser().getEncryptedPassword()).isNotNull();
+        assertThat(savedCustomer.getUser().getPassword()).isNull();
+    }
+
+    @Test
+    @DirtiesContext
     public void shouldDeleteOne() throws Exception {
         List<Customer> customerListBeforeDelete = (List<Customer>) customerService.listAll();
         assertThat(customerListBeforeDelete.size()).isEqualTo(3);
 
         customerService.delete(1L);
+
+        List<Customer> customerListAfterDelete = (List<Customer>) customerService.listAll();
+        assertThat(customerListAfterDelete.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldDeleteOneAndKeepUser() throws Exception {
+        List<Customer> customerListBeforeDelete = (List<Customer>) customerService.listAll();
+        assertThat(customerListBeforeDelete.size()).isEqualTo(3);
+
+        List<User> userListBeforeDelete = (List<User>) userService.listAll();
+        assertThat(userListBeforeDelete.size()).isEqualTo(3);
+
+        customerService.delete(1L);
+
+        List<Customer> customerListAfterDelete = (List<Customer>) customerService.listAll();
+        assertThat(customerListAfterDelete.size()).isEqualTo(2);
+
+        List<User> userListAfterDelete = (List<User>) userService.listAll();
+        assertThat(userListAfterDelete.size()).isEqualTo(3);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldDeleteOneWithoutUser() throws Exception {
+        List<Customer> customerListBeforeDelete = (List<Customer>) customerService.listAll();
+        assertThat(customerListBeforeDelete.size()).isEqualTo(3);
+
+        customerService.delete(3L);
 
         List<Customer> customerListAfterDelete = (List<Customer>) customerService.listAll();
         assertThat(customerListAfterDelete.size()).isEqualTo(2);

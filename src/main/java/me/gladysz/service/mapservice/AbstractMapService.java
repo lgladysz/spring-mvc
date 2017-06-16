@@ -1,4 +1,4 @@
-package me.gladysz.service;
+package me.gladysz.service.mapservice;
 
 import me.gladysz.model.DomainObject;
 

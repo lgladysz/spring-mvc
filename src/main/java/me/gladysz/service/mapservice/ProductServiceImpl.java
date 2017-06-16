@@ -1,11 +1,9 @@
-package me.gladysz.service;
+package me.gladysz.service.mapservice;
 
 import me.gladysz.model.Product;
+import me.gladysz.service.ProductService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
 
 @Service
 @Profile("map")
