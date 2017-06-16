@@ -20,6 +20,8 @@ public class User implements DomainObject {
     private String encryptedPassword;
     private Boolean enabled = true;
 
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private Customer customer;
 
     @Override
     public Long getId() {
@@ -69,5 +71,13 @@ public class User implements DomainObject {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
