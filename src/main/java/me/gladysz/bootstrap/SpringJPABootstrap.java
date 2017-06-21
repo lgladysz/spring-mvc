@@ -1,5 +1,6 @@
 package me.gladysz.bootstrap;
 
+import me.gladysz.model.Address;
 import me.gladysz.model.Customer;
 import me.gladysz.model.Product;
 import me.gladysz.model.User;
@@ -46,10 +47,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         customer1.setLastName("Wick");
         customer1.setEmail("email@email.com");
         customer1.setPhoneNumber("555555555");
-        customer1.setAddressLineOne("Some Street 1");
-        customer1.setAddressLineTwo("Seccond street");
-        customer1.setZipCode("55-555");
-        customer1.setCity("NYC");
+        customer1.setBillingAddress(new Address());
+        customer1.getBillingAddress().setAddressLineOne("Some Street 1");
+        customer1.getBillingAddress().setAddressLineTwo("Seccond street");
+        customer1.getBillingAddress().setZipCode("55-555");
+        customer1.getBillingAddress().setCity("NYC");
         customerService.saveOrUpdate(customer1);
 
         Customer customer2 = new Customer();
@@ -58,10 +60,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         customer2.setLastName("Twain");
         customer2.setEmail("emailemail@email.com");
         customer2.setPhoneNumber("555666333");
-        customer2.setAddressLineOne("Some Street 4");
-        customer2.setAddressLineTwo("Street");
-        customer2.setZipCode("55-598");
-        customer2.setCity("Warsaw");
+        customer2.setBillingAddress(new Address());
+        customer2.getBillingAddress().setAddressLineOne("Some Street 4");
+        customer2.getBillingAddress().setAddressLineTwo("Street");
+        customer2.getBillingAddress().setZipCode("55-598");
+        customer2.getBillingAddress().setCity("Warsaw");
         customerService.saveOrUpdate(customer2);
 
 
@@ -71,10 +74,11 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         customer3.setLastName("Moon");
         customer3.setEmail("email22@email.com");
         customer3.setPhoneNumber("567891456");
-        customer3.setAddressLineOne("Street 1");
-        customer3.setAddressLineTwo("Seccond");
-        customer3.setZipCode("58-955");
-        customer3.setCity("Cracow");
+        customer3.setBillingAddress(new Address());
+        customer3.getBillingAddress().setAddressLineOne("Street 1");
+        customer3.getBillingAddress().setAddressLineTwo("Seccond");
+        customer3.getBillingAddress().setZipCode("58-955");
+        customer3.getBillingAddress().setCity("Cracow");
         customerService.saveOrUpdate(customer3);
     }
 

@@ -1,5 +1,6 @@
 package me.gladysz.controller;
 
+import me.gladysz.model.Address;
 import me.gladysz.model.Customer;
 import me.gladysz.service.CustomerService;
 import org.junit.Before;
@@ -106,10 +107,11 @@ public class CustomerControllerTest {
         returnCustomer.setLastName(lastName);
         returnCustomer.setEmail(email);
         returnCustomer.setPhoneNumber(phoneNumber);
-        returnCustomer.setAddressLineOne(addressLineOne);
-        returnCustomer.setAddressLineTwo(addressLineTwo);
-        returnCustomer.setCity(city);
-        returnCustomer.setZipCode(zipCode);
+        returnCustomer.setBillingAddress(new Address());
+        returnCustomer.getBillingAddress().setAddressLineOne(addressLineOne);
+        returnCustomer.getBillingAddress().setAddressLineTwo(addressLineTwo);
+        returnCustomer.getBillingAddress().setCity(city);
+        returnCustomer.getBillingAddress().setZipCode(zipCode);
 
         when(customerService.saveOrUpdate(Matchers.any(Customer.class))).thenReturn(returnCustomer);
 
@@ -119,10 +121,10 @@ public class CustomerControllerTest {
                 .param("lastName", lastName)
                 .param("email", email)
                 .param("phoneNumber", phoneNumber)
-                .param("addressLineOne", addressLineOne)
-                .param("addressLineTwo", addressLineTwo)
-                .param("city", city)
-                .param("zipCode", zipCode))
+                .param("billingAddress.addressLineOne", addressLineOne)
+                .param("billingAddress.addressLineTwo", addressLineTwo)
+                .param("billingAddress.city", city)
+                .param("billingAddress.zipCode", zipCode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customer/show/" + id.toString()))
                 .andExpect(model().attribute("customer", instanceOf(Customer.class)))
@@ -131,10 +133,10 @@ public class CustomerControllerTest {
                 .andExpect(model().attribute("customer", hasProperty("lastName", is(lastName))))
                 .andExpect(model().attribute("customer", hasProperty("email", is(email))))
                 .andExpect(model().attribute("customer", hasProperty("phoneNumber", is(phoneNumber))))
-                .andExpect(model().attribute("customer", hasProperty("addressLineOne", is(addressLineOne))))
-                .andExpect(model().attribute("customer", hasProperty("addressLineTwo", is(addressLineTwo))))
-                .andExpect(model().attribute("customer", hasProperty("city", is(city))))
-                .andExpect(model().attribute("customer", hasProperty("zipCode", is(zipCode))));
+                .andExpect(model().attribute("customer", hasProperty("billingAddress", hasProperty("addressLineOne", is(addressLineOne)))))
+                .andExpect(model().attribute("customer", hasProperty("billingAddress", hasProperty("addressLineTwo", is(addressLineTwo)))))
+                .andExpect(model().attribute("customer", hasProperty("billingAddress", hasProperty("city", is(city)))))
+                .andExpect(model().attribute("customer", hasProperty("billingAddress", hasProperty("zipCode", is(zipCode)))));
 
         //verify properties of bound object
         ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
@@ -147,10 +149,10 @@ public class CustomerControllerTest {
         assertEquals(lastName, boundCustomer.getLastName());
         assertEquals(email, boundCustomer.getEmail());
         assertEquals(phoneNumber, boundCustomer.getPhoneNumber());
-        assertEquals(addressLineOne, boundCustomer.getAddressLineOne());
-        assertEquals(addressLineTwo, boundCustomer.getAddressLineTwo());
-        assertEquals(city, boundCustomer.getCity());
-        assertEquals(zipCode, boundCustomer.getZipCode());
+        assertEquals(addressLineOne, boundCustomer.getBillingAddress().getAddressLineOne());
+        assertEquals(addressLineTwo, boundCustomer.getBillingAddress().getAddressLineTwo());
+        assertEquals(city, boundCustomer.getBillingAddress().getCity());
+        assertEquals(zipCode, boundCustomer.getBillingAddress().getZipCode());
 
     }
 
