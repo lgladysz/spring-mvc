@@ -1,8 +1,8 @@
 package me.gladysz.service.jpaservice;
 
-import me.gladysz.model.Customer;
-import me.gladysz.model.User;
+import me.gladysz.model.*;
 import me.gladysz.service.CustomerService;
+import me.gladysz.service.ProductService;
 import me.gladysz.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +25,8 @@ public class UserServiceJpaDaoImplTest {
 
     private CustomerService customerService;
 
+    private ProductService productService;
+
     @Autowired
     public void setCustomerService(CustomerService customerService) {
         this.customerService = customerService;
@@ -33,6 +35,11 @@ public class UserServiceJpaDaoImplTest {
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 
 
@@ -137,5 +144,86 @@ public class UserServiceJpaDaoImplTest {
 
         List<User> userListAfterDelete = (List<User>) userService.listAll();
         assertThat(userListAfterDelete.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldAddCartTUser() throws Exception {
+        User user = new User();
+
+        user.setUsername("UserOne");
+        user.setPassword("UserPassword");
+
+        user.setCart(new Cart());
+
+        User savedUser = userService.saveOrUpdate(user);
+
+        assertThat(savedUser.getId()).isNotNull();
+        assertThat(savedUser.getVersion()).isNotNull();
+        assertThat(savedUser.getCart()).isNotNull();
+        assertThat(savedUser.getCart().getId()).isNotNull();
+        assertThat(savedUser.getCart().getVersion()).isNotNull();
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldAddCartToUserWithCartDetails() throws Exception {
+        User user = new User();
+
+        user.setUsername("UserOne");
+        user.setPassword("UserPassword");
+
+        user.setCart(new Cart());
+
+        List<Product> products = (List<Product>) productService.listAll();
+
+        CartDetail cartItem1 = new CartDetail();
+        cartItem1.setProduct(products.get(0));
+        user.getCart().addCartDetail(cartItem1);
+
+
+        CartDetail cartItem2 = new CartDetail();
+        cartItem1.setProduct(products.get(1));
+        user.getCart().addCartDetail(cartItem2);
+
+        User savedUser = userService.saveOrUpdate(user);
+
+        assertThat(savedUser.getId()).isNotNull();
+        assertThat(savedUser.getVersion()).isNotNull();
+        assertThat(savedUser.getCart()).isNotNull();
+        assertThat(savedUser.getCart().getId()).isNotNull();
+        assertThat(savedUser.getCart().getVersion()).isNotNull();
+        assertThat(savedUser.getCart().getCartDetails().size()).isEqualTo(2);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldAddAndRemoveCartToUserWithCartDetails() throws Exception {
+        User user = new User();
+
+        user.setUsername("UserOne");
+        user.setPassword("UserPassword");
+
+        user.setCart(new Cart());
+
+        List<Product> products = (List<Product>) productService.listAll();
+
+        CartDetail cartItem1 = new CartDetail();
+        cartItem1.setProduct(products.get(0));
+        user.getCart().addCartDetail(cartItem1);
+
+
+        CartDetail cartItem2 = new CartDetail();
+        cartItem1.setProduct(products.get(1));
+        user.getCart().addCartDetail(cartItem2);
+
+        User savedUser = userService.saveOrUpdate(user);
+
+        savedUser.getCart().removeCartDetail(savedUser.getCart().getCartDetails().get(0));
+
+        User savedUser2 = userService.saveOrUpdate(savedUser);
+
+        assertThat(savedUser.getCart().getCartDetails().size()).isEqualTo(1);
+        assertThat(savedUser2.getCart().getCartDetails().size()).isEqualTo(1);
     }
 }
