@@ -1,16 +1,12 @@
 package me.gladysz.model;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 @Entity
-public class Customer implements DomainObject {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Version
-    private Integer version;
+public class Customer extends AbstractDomainClass {
 
     private String firstName;
     private String lastName;
@@ -23,26 +19,8 @@ public class Customer implements DomainObject {
     @Embedded
     private Address shippingAddress;
 
-    @OneToOne(cascade = {CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private User user;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 
     public String getFirstName() {
         return firstName;

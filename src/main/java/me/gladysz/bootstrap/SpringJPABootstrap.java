@@ -1,10 +1,9 @@
 package me.gladysz.bootstrap;
 
-import me.gladysz.model.Address;
-import me.gladysz.model.Customer;
-import me.gladysz.model.Product;
-import me.gladysz.model.User;
+import me.gladysz.enums.OrderStatus;
+import me.gladysz.model.*;
 import me.gladysz.service.CustomerService;
+import me.gladysz.service.OrderService;
 import me.gladysz.service.ProductService;
 import me.gladysz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedEvent> {
-
 
     private final ProductService productService;
 
@@ -24,25 +23,63 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
     private final UserService userService;
 
+    private final OrderService orderService;
+
     @Autowired
-    public SpringJPABootstrap(ProductService productService, CustomerService customerService, UserService userService) {
+    public SpringJPABootstrap(ProductService productService, CustomerService customerService, UserService userService, OrderService orderService) {
         this.productService = productService;
         this.customerService = customerService;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         loadProducts();
-        loadCustomers();
-        loadUsers();
-        setRelationships();
+        loadUsersAndCustomers();
+        loadCarts();
+        loadOrderHistory();
     }
 
-    private void loadCustomers() {
+    private void loadOrderHistory() {
+        List<User> users = (List<User>) userService.listAll();
+        List<Product> products = (List<Product>) productService.listAll();
+
+        users.forEach(user -> {
+            Order order = new Order();
+            order.setCustomer(user.getCustomer());
+            order.setStatus(OrderStatus.SHIPPED);
+
+            products.forEach(product -> {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setProduct(product);
+                orderDetail.setQuantity(1);
+                order.addToOrderDetails(orderDetail);
+                orderService.saveOrUpdate(order);
+            });
+        });
+    }
+
+    private void loadCarts() {
+        List<User> users = (List<User>) userService.listAll();
+        List<Product> products = (List<Product>) productService.listAll();
+
+        users.forEach(user -> {
+            user.setCart(new Cart());
+            CartDetail cartDetail = new CartDetail();
+            cartDetail.setProduct(products.get(0));
+            cartDetail.setQuantity(2);
+            user.getCart().addCartDetail(cartDetail);
+            userService.saveOrUpdate(user);
+        });
+    }
+
+    private void loadUsersAndCustomers() {
+        User user1 = new User();
+        user1.setUsername("Username1");
+        user1.setPassword("password1");
 
         Customer customer1 = new Customer();
-        customer1.setId(1L);
         customer1.setFirstName("John");
         customer1.setLastName("Wick");
         customer1.setEmail("email@email.com");
@@ -52,10 +89,16 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         customer1.getBillingAddress().setAddressLineTwo("Seccond street");
         customer1.getBillingAddress().setZipCode("55-555");
         customer1.getBillingAddress().setCity("NYC");
+
+        customer1.setUser(user1);
         customerService.saveOrUpdate(customer1);
 
+
+        User user2 = new User();
+        user2.setUsername("Username2");
+        user2.setPassword("password2");
+
         Customer customer2 = new Customer();
-        customer2.setId(2L);
         customer2.setFirstName("Mark");
         customer2.setLastName("Twain");
         customer2.setEmail("emailemail@email.com");
@@ -65,11 +108,16 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         customer2.getBillingAddress().setAddressLineTwo("Street");
         customer2.getBillingAddress().setZipCode("55-598");
         customer2.getBillingAddress().setCity("Warsaw");
+
+        customer2.setUser(user2);
         customerService.saveOrUpdate(customer2);
 
 
+        User user3 = new User();
+        user3.setUsername("Username3");
+        user3.setPassword("password3");
+
         Customer customer3 = new Customer();
-        customer3.setId(3L);
         customer3.setFirstName("Bob");
         customer3.setLastName("Moon");
         customer3.setEmail("email22@email.com");
@@ -79,6 +127,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         customer3.getBillingAddress().setAddressLineTwo("Seccond");
         customer3.getBillingAddress().setZipCode("58-955");
         customer3.getBillingAddress().setCity("Cracow");
+
+        customer3.setUser(user3);
         customerService.saveOrUpdate(customer3);
     }
 
@@ -113,39 +163,5 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         product5.setPrice(new BigDecimal("45.99"));
         product5.setImageUrl("http://lorempixel.com/640/480/technics/5/");
         productService.saveOrUpdate(product5);
-    }
-
-    private void loadUsers() {
-        User user1 = new User();
-        user1.setUsername("Username1");
-        user1.setPassword("password1");
-        userService.saveOrUpdate(user1);
-
-        User user2 = new User();
-        user2.setUsername("Username2");
-        user2.setPassword("password2");
-        userService.saveOrUpdate(user2);
-
-        User user3 = new User();
-        user3.setUsername("Username3");
-        user3.setPassword("password3");
-        userService.saveOrUpdate(user3);
-    }
-
-    private void setRelationships() {
-        User user;
-        Customer customer;
-
-        user = userService.getById(1L);
-        customer = customerService.getById(1L);
-
-        customer.setUser(user);
-        customerService.saveOrUpdate(customer);
-
-        user = userService.getById(2L);
-        customer = customerService.getById(2L);
-
-        customer.setUser(user);
-        customerService.saveOrUpdate(customer);
     }
 }
