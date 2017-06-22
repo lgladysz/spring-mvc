@@ -58,7 +58,7 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(customer.getBillingAddress()).hasFieldOrPropertyWithValue("addressLineTwo", "Seccond street");
         assertThat(customer.getBillingAddress()).hasFieldOrPropertyWithValue("zipCode", "55-555");
         assertThat(customer.getBillingAddress()).hasFieldOrPropertyWithValue("city", "NYC");
-        assertThat(customer).hasFieldOrPropertyWithValue("version", 1);
+        assertThat(customer).hasFieldOrPropertyWithValue("version", 0);
         assertThat(customer.getUser()).isNotNull();
     }
 
@@ -79,7 +79,7 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(modifiedCustomer.getBillingAddress()).hasFieldOrPropertyWithValue("addressLineTwo", "Seccond street");
         assertThat(modifiedCustomer.getBillingAddress()).hasFieldOrPropertyWithValue("zipCode", "55-555");
         assertThat(modifiedCustomer.getBillingAddress()).hasFieldOrPropertyWithValue("city", "NYC");
-        assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("version", 1);
+        assertThat(modifiedCustomer).hasFieldOrPropertyWithValue("version", 0);
 
         modifiedCustomer.setFirstName("Jane");
         modifiedCustomer.setLastName("Moon");
@@ -107,7 +107,7 @@ public class CustomerServiceJpaDaoImplTest {
         assertThat(returnedCustomer.getBillingAddress()).hasFieldOrPropertyWithValue("addressLineTwo", "Corner street");
         assertThat(returnedCustomer.getBillingAddress()).hasFieldOrPropertyWithValue("city", "London");
         assertThat(returnedCustomer.getBillingAddress()).hasFieldOrPropertyWithValue("zipCode", "12-345");
-        assertThat(returnedCustomer).hasFieldOrPropertyWithValue("version", 2);
+        assertThat(returnedCustomer).hasFieldOrPropertyWithValue("version", 1);
     }
 
     @Test
