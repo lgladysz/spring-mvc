@@ -1,16 +1,11 @@
 package me.gladysz.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
-public class CartDetail implements DomainObject {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Version
-    private Integer version;
+public class CartDetail extends AbstractDomainClass {
 
     @ManyToOne
     private Cart cart;
@@ -18,23 +13,7 @@ public class CartDetail implements DomainObject {
     @OneToOne
     private Product product;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+    private Integer quantity;
 
     public Cart getCart() {
         return cart;
@@ -50,5 +29,13 @@ public class CartDetail implements DomainObject {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

@@ -1,18 +1,14 @@
 package me.gladysz.model;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Cart implements DomainObject {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Version
-    private Integer version;
+public class Cart extends AbstractDomainClass {
 
     @OneToOne
     private User user;
@@ -22,24 +18,6 @@ public class Cart implements DomainObject {
 
     public Cart() {
         this.cartDetails = new ArrayList<>();
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public User getUser() {
