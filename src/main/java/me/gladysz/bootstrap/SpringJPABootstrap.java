@@ -2,10 +2,8 @@ package me.gladysz.bootstrap;
 
 import me.gladysz.enums.OrderStatus;
 import me.gladysz.model.*;
-import me.gladysz.service.CustomerService;
-import me.gladysz.service.OrderService;
-import me.gladysz.service.ProductService;
-import me.gladysz.service.UserService;
+import me.gladysz.model.security.Role;
+import me.gladysz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -25,12 +23,15 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
 
     private final OrderService orderService;
 
+    private final RoleService roleService;
+
     @Autowired
-    public SpringJPABootstrap(ProductService productService, CustomerService customerService, UserService userService, OrderService orderService) {
+    public SpringJPABootstrap(ProductService productService, CustomerService customerService, UserService userService, OrderService orderService, RoleService roleService) {
         this.productService = productService;
         this.customerService = customerService;
         this.userService = userService;
         this.orderService = orderService;
+        this.roleService = roleService;
     }
 
     @Override
@@ -39,6 +40,8 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
         loadUsersAndCustomers();
         loadCarts();
         loadOrderHistory();
+        loadRoles();
+        assignUsersToDefaultRole();
     }
 
     private void loadOrderHistory() {
@@ -73,6 +76,27 @@ public class SpringJPABootstrap implements ApplicationListener<ContextRefreshedE
             userService.saveOrUpdate(user);
         });
     }
+
+    private void assignUsersToDefaultRole() {
+        List<Role> roles = (List<Role>) roleService.listAll();
+        List<User> users = (List<User>) userService.listAll();
+
+        roles.forEach(role -> {
+            if (role.getRole().equalsIgnoreCase("CUSTOMER")) {
+                users.forEach(user -> {
+                    user.addRole(role);
+                    userService.saveOrUpdate(user);
+                });
+            }
+        });
+    }
+
+    private void loadRoles() {
+        Role role = new Role();
+        role.setRole("CUSTOMER");
+        roleService.saveOrUpdate(role);
+    }
+
 
     private void loadUsersAndCustomers() {
         User user1 = new User();

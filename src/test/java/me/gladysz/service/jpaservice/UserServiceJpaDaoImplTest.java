@@ -57,7 +57,7 @@ public class UserServiceJpaDaoImplTest {
         assertThat(user).isNotNull();
         assertThat(user).hasFieldOrPropertyWithValue("username", "Username1");
         assertThat(user).hasFieldOrPropertyWithValue("password", null);
-        assertThat(user).hasFieldOrPropertyWithValue("version", 1);
+        assertThat(user).hasFieldOrPropertyWithValue("version", 2);
         assertThat(user.getEncryptedPassword()).isNotEmpty();
         assertThat(user.getCustomer()).isNotNull();
     }
