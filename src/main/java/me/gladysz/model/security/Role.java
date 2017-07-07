@@ -2,8 +2,11 @@ package me.gladysz.model.security;
 
 import me.gladysz.model.AbstractDomainClass;
 import me.gladysz.model.User;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.ArrayList;
@@ -14,8 +17,9 @@ public class Role extends AbstractDomainClass {
 
     private String role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
+    @Fetch(FetchMode.SELECT)
     private List<User> users = new ArrayList<>();
 
     public String getRole() {
