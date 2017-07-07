@@ -1,6 +1,8 @@
 package me.gladysz.model;
 
 import me.gladysz.model.security.Role;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,8 +25,9 @@ public class User extends AbstractDomainClass {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
+    @Fetch(FetchMode.SELECT)
     private List<Role> roles = new ArrayList<>();
 
     public String getUsername() {
