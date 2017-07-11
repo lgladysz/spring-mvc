@@ -1,5 +1,7 @@
 package me.gladysz.service.reposervice;
 
+import me.gladysz.commands.CustomerForm;
+import me.gladysz.converters.CustomerFormToCustomer;
 import me.gladysz.model.Customer;
 import me.gladysz.repository.CustomerRepository;
 import me.gladysz.service.CustomerService;
@@ -15,10 +17,12 @@ import java.util.List;
 public class CustomerServiceRepoImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerFormToCustomer customerFormToCustomer;
 
     @Autowired
-    public CustomerServiceRepoImpl(CustomerRepository customerRepository) {
+    public CustomerServiceRepoImpl(CustomerRepository customerRepository, CustomerFormToCustomer customerFormToCustomer) {
         this.customerRepository = customerRepository;
+        this.customerFormToCustomer = customerFormToCustomer;
     }
 
 
@@ -42,5 +46,18 @@ public class CustomerServiceRepoImpl implements CustomerService {
     @Override
     public void delete(Long id) {
         customerRepository.delete(id);
+    }
+
+    @Override
+    public Customer saveOrUpdateCustomerForm(CustomerForm customerForm) {
+        Customer newCustomer = customerFormToCustomer.convert(customerForm);
+
+        if (newCustomer.getUser().getId() != null) {
+            Customer existingCustomer = getById(newCustomer.getId());
+
+            newCustomer.getUser().setEnabled(existingCustomer.getUser().getEnabled());
+        }
+
+        return saveOrUpdate(newCustomer);
     }
 }

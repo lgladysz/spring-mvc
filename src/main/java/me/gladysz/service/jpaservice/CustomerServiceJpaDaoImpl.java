@@ -1,5 +1,7 @@
 package me.gladysz.service.jpaservice;
 
+import me.gladysz.commands.CustomerForm;
+import me.gladysz.converters.CustomerFormToCustomer;
 import me.gladysz.model.Customer;
 import me.gladysz.model.User;
 import me.gladysz.service.CustomerService;
@@ -16,10 +18,12 @@ import java.util.List;
 public class CustomerServiceJpaDaoImpl extends AbstractJpaDaoService implements CustomerService {
 
     private final EncryptionService encryptionService;
+    private final CustomerFormToCustomer customerFormToCustomer;
 
     @Autowired
-    public CustomerServiceJpaDaoImpl(EncryptionService encryptionService) {
+    public CustomerServiceJpaDaoImpl(EncryptionService encryptionService, CustomerFormToCustomer customerFormToCustomer) {
         this.encryptionService = encryptionService;
+        this.customerFormToCustomer = customerFormToCustomer;
     }
 
     @Override
@@ -67,4 +71,16 @@ public class CustomerServiceJpaDaoImpl extends AbstractJpaDaoService implements 
         em.getTransaction().commit();
     }
 
+    @Override
+    public Customer saveOrUpdateCustomerForm(CustomerForm customerForm) {
+        Customer newCustomer = customerFormToCustomer.convert(customerForm);
+
+        if (newCustomer.getUser().getId() != null) {
+            Customer existingCustomer = getById(newCustomer.getId());
+
+            newCustomer.getUser().setEnabled(existingCustomer.getUser().getEnabled());
+        }
+
+        return saveOrUpdate(newCustomer);
+    }
 }
