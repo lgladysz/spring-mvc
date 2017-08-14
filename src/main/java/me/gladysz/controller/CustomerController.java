@@ -6,16 +6,19 @@ import me.gladysz.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 @RequestMapping("/customer")
 @Controller
 public class CustomerController {
 
     private static final String ATRIBUTE_1 = "customers";
-    private static final String ATRIBUTE_2 = "customer";
+    private static final String ATRIBUTE_2 = "customerForm";
     private final CustomerService customerService;
 
     @Autowired
@@ -62,14 +65,18 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String saveOrUpdateCustomer(CustomerForm customerForm) {
+    public String saveOrUpdateCustomer(@Valid CustomerForm customerForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "customer/form";
+        }
         Customer newCustomer = customerService.saveOrUpdateCustomerForm(customerForm);
-        return "redirect:/customer/show/" + newCustomer.getId();
+        return "redirect:customer/show/" + newCustomer.getId();
     }
 
     @RequestMapping("delete/{id}")
     public String deleteCustomer(@PathVariable Long id) {
         customerService.delete(id);
-        return "redirect:/customer/list";
+        return "redirect:customer/list";
     }
 }

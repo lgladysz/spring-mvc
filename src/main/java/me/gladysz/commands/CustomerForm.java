@@ -1,15 +1,22 @@
 package me.gladysz.commands;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 public class CustomerForm {
     private Long userId;
     private Integer userVersion;
     private Long customerId;
     private Integer customerVersion;
+
+    @NotBlank
     private String username;
     private String passwordText;
     private String passwordTextConfirm;
     private String firstName;
     private String lastName;
+
+    @Email
     private String email;
     private String phoneNumber;
 
